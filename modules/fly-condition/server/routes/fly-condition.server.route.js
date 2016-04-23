@@ -6,6 +6,9 @@ var flyCondition = require('../controllers/fly-condition.server.controller');
  */
 
 module.exports = function (app) {
+  app.route('/api/flyCondition/cluster/:lan/:lon')
+      .get(flyCondition.range);
   app.route('/api/flyCondition/:lan/:lon')
-    .get(flyCondition.index);
+      .get(flyCondition.index);
+
 };
