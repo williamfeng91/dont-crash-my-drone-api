@@ -16,20 +16,21 @@
     /////////////////////
 
     function getFlyCondition(lat, lng) {
-        return $http({
-            url: "/api/flyCondition/" + lat + '/' + lng,
-            method: 'GET',
-            dataType: 'json'
-        }).then(handleSuccess, handleError);
+      console.log("GET /api/flyCondition/" + lat + '/' + lng);
+      return $http({
+        url: "/api/flyCondition/" + lat + '/' + lng,
+        method: 'GET',
+        dataType: 'json'
+      }).then(handleSuccess, handleError);
     }
 
     // private functions
     function handleSuccess(response) {
-        return $q.resolve(response.data);
+      return $q.resolve(response.data);
     }
 
     function handleError(response) {
-        return $q.reject(response);
+      return $q.reject(response);
     }
   }
 }());

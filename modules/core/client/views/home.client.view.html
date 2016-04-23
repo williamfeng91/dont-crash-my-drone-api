@@ -1,19 +1,42 @@
 <section>
-    <form class="navbar-form navbar-left" role="search">
-      <div class="input-group">
-        <input class="form-control" size=80 places-auto-complete types="['geocode']" on-place-changed="vm.search()"/>
-      </div>
-    </form>
-    <div map-lazy-load="https://maps.google.com/maps/api/js" map-lazy-load-params="{{vm.googleMapsUrl}}">
-        <ng-map zoom="13" center="current-location" style="height:600px"
-            on-center-changed="centerCustomMarker()">
-            <marker position="{{vm.address}}" on-click="vm.showCustomMarker()"></marker>
-            <custom-marker id="focus" position="{{vm.address}}" on-click="vm.closeCustomMarker()">
-              <div>
-                <img width="300" src="http://cdn.cstatic.net/images/gridfs/53b42fd3f92ea17d970280b4/Screen%20Shot%202014-07-02%20at%2012.07.54%20PM.png" />
-                <br/>
-                If you want to visit us, please click <a href="https://www.whitehouse.gov">here</a>
-            </custom-marker>
-        </ng-map>
-    </div>
+  <div map-lazy-load="https://maps.google.com/maps/api/js" map-lazy-load-params="{{vm.googleMapsUrl}}">
+    <ng-map zoom="13" center="current-location" style="height:600px"
+        on-center-changed="centerCustomMarker()">
+      <custom-control id="searchbar" position="TOP_LEFT">
+        <div id="search-container" class="inner-addon right-addon">
+          <input id="pac-input" class="controls" ng-model="vm.address" size=80 places-auto-complete types="['geocode']" on-place-changed="vm.search()"/>
+          <span id="searchclear" class="glyphicon glyphicon-remove-circle" ng-click="vm.clearAddress()"></span>
+        </div>
+      </custom-control>
+      <marker visible="false" id="focus" position="{{vm.pos}}" on-click="vm.showInfoWindow()">
+      </marker>
+      <info-window id="info">
+        <div ng-non-bindable>
+          <div justgage
+            value="{{vm.flyCondition.risk * 20}}" value-font-color="black"
+            min="0" max="100"
+            hide-min-max="false" hide-value="false" hide-inner-shadow="false"
+            gauge-width-scale="0.5" gauge-color="grey"
+            show-inner-shadow="true" shadow-opacity="0.3"
+            shadow-size="3" shadow-vertical-offset="10"
+            custom-sectors="{{vm.customSectors}}" no-gradient="false"
+            label="Risk" label-font-color="black"
+            start-animation-time="1200"
+            donut="true" donut-start-angle="90"
+            counter="true" decimals="2" symbol="%" format-number="true"
+            human-friendly="true" human-friendly-decimal="true"></div>
+          <table class="table">
+            <tr>
+              <td>Wind</td>
+              <td>{{vm.flyCondition.wind.speed}} km/h {{vm.flyCondition.wind.direction}}</td>
+            </tr>
+            <tr>
+              <td>Rain</td>
+              <td ng-if="vm.flyCondition.rain">Yes</td>
+              <td ng-if="!vm.flyCondition.rain">None</td>
+            </tr>
+        </div>
+      </info-window>
+    </ng-map>
+  </div>
 </section>
