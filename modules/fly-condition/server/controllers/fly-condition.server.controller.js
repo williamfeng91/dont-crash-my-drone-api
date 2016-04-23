@@ -141,8 +141,9 @@ function calculateRisk(item, lat, lon){
 
         for(var i = 0; i < docs.length; ++i){
             var doc = docs[i];
-            if(isWithin(lat, lon, doc.lat, doc.lng, 5000)){
-                locationRating = 5;
+            var dist = calculateDistance(lat, lon, doc.lat, doc.lng);
+            if(dist < 5400){
+                locationRating = Math.max(locationRating, 5);
                 break;
             }
         }
@@ -162,7 +163,6 @@ function calculateRisk(item, lat, lon){
                 windRating = 5;
             }
         }
-        console.log(locationRating + "-" +  windRating + "-" + rainRating)
         return defer.resolve(Math.max(locationRating, windRating, rainRating));
     });
 
