@@ -32,14 +32,31 @@ module.exports.index = function(req, res) {
 
             Q.allSettled(asyncs)
                 .then(function(datas){
+                    var results = [];
                     for(var j = 0; j < datas.length; ++j){
                         var data = datas[j];
                         if(data.state === 'fulfilled'){
                             result.list[j].risk = data.value;
+                            var resultItem = {
+                                risk: data.value
+                            };
+                            if(result.list[j].wind){
+                                resultItem["wind"] = {
+                                    speed: result.list[j].wind.speed,
+                                    direction: convertWindDirection(result.list[j].wind.deg)
+                                }
+                            }
+                            if(result.list[j].rain){
+                                resultItem["rain"] = result.list[j].rain;
+                            }else{
+                                resultItem["rain"] = null;
+                            }
+
+                            results.push(resultItem);
                         }
                     }
 
-                    res.json(result);
+                    res.json(results);
                 });
         });
     });
@@ -76,19 +93,38 @@ module.exports.range = function(req, res) {
             result = JSON.parse(result);
             var asyncs = [];
             for(var i = 0; i < result.list.length; ++i){
-                asyncs.push(calculateRisk(result.list[i], result.list[i].lat, result.list[i].lon));
+                asyncs.push(calculateRisk(result.list[i], result.list[i].coord.lat, result.list[i].coord.lon));
             }
 
             Q.allSettled(asyncs)
                 .then(function(datas){
+                    var results = [];
                     for(var j = 0; j < datas.length; ++j){
                         var data = datas[j];
                         if(data.state === 'fulfilled'){
                             result.list[j].risk = data.value;
+                            var resultItem = {
+                                risk: data.value
+                            };
+                            if(result.list[j].wind){
+                                resultItem["wind"] = {
+                                    speed: result.list[j].wind.speed,
+                                    direction: convertWindDirection(result.list[j].wind.deg)
+                                }
+                            }
+                            if(result.list[j].rain){
+                                resultItem["rain"] = result.list[j].rain;
+                            }else{
+                                resultItem["rain"] = null;
+                            }
+
+                            resultItem["coord"] = result.list[j].coord;
+
+                            results.push(resultItem);
                         }
                     }
 
-                    res.json(result);
+                    res.json(results);
                 });
 
         });
@@ -144,4 +180,40 @@ function calculateDistance(lat1, lon1, lat2, lon2){
 
 function toRadiance(degrees){
     return degrees * Math.PI / 180;
+}
+
+function convertWindDirection(degree){
+    if(degree <= 11.24 || degree >= 348.75){
+        return "N";
+    }else if(degree <= 33.74 && degree >= 11.25){
+        return "NNE";
+    }else if(degree <= 56.24 && degree >= 33.75){
+        return "NE";
+    }else if(degree <= 78.74 && degree >= 56.25){
+        return "ENE";
+    }else if(degree <= 101.24 && degree >= 78.75){
+        return "E";
+    }else if(degree <= 123.74 && degree >= 101.25){
+        return "ESE";
+    }else if(degree <= 146.24 && degree >= 123.75){
+        return "SE";
+    }else if(degree >= 146.25 && degree <= 168.74){
+        return "SSE";
+    }else if(degree >= 168.75 && degree <= 191.24){
+        return "S";
+    }else if(degree >= 191.25 && degree <= 213.74){
+        return "SSW";
+    }else if(degree >= 213.75 && degree <= 236.24){
+        return "SW";
+    }else if(degree >= 236.25 && degree <= 258.74){
+        return "WSW";
+    }else if(degree >= 258.75 && degree <= 281.24){
+        return "W";
+    }else if(degree >= 281.25 && degree <= 303.74){
+        return "WNW";
+    }else if(degree >= 303.75 && degree <= 326.24){
+        return "NW";
+    }else{
+        return "NNW"
+    }
 }
