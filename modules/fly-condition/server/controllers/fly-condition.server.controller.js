@@ -46,11 +46,12 @@ module.exports.index = function(req, res) {
                                     direction: convertWindDirection(result.list[j].wind.deg)
                                 }
                             }
-                            if(result.list[j].rain){
+                            if(result.list[j].rain && Object.keys(result.list[j].rain).length > 0){
                                 resultItem["rain"] = result.list[j].rain;
                             }else{
                                 resultItem["rain"] = null;
                             }
+                            resultItem.description = result.list[j].weather[0].description;
 
                             results.push(resultItem);
                         }
@@ -112,7 +113,7 @@ module.exports.range = function(req, res) {
                                     direction: convertWindDirection(result.list[j].wind.deg)
                                 }
                             }
-                            if(result.list[j].rain){
+                            if(result.list[j].rain && Object.keys(result.list[j].rain).length > 0){
                                 resultItem["rain"] = result.list[j].rain;
                             }else{
                                 resultItem["rain"] = null;
@@ -143,7 +144,7 @@ function calculateRisk(item, lat, lon){
                 return 1.0;
             }
         }
-        if(item.rain){
+        if(item.rain && Object.keys(item.rain).length > 0){
             return defer.resolve(0.9);
         }
         if(item.wind && item.wind.speed){
