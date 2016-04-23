@@ -64,6 +64,11 @@ module.exports.index = function(req, res) {
     request.end();
 };
 
+module.exports.getAllBlacklist = function(req,res){
+    FlyConditionBlackList.find().exec(function(err, docs){
+        res.status(200).send(docs);
+    });
+};
 module.exports.range = function(req, res) {
     var centerLat = parseFloat(req.params.lan);
     var centerLon = parseFloat(req.params.lon);
