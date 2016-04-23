@@ -15,6 +15,9 @@ var FlyConditionBlacklistSchema = new Schema({
   },
   lng: {
     type: Number
+  },
+  type: {
+    type: Number
   }
 });
 

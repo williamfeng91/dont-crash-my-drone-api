@@ -4,11 +4,14 @@ var path = require('path');
 var config = require(path.resolve('./config/config'));
 var mongoose = require('mongoose');
 var FlyConditionBlackList = mongoose.model("FlyConditionBlacklist");
+var Drone = mongoose.model("Drone");
 var Q = require('q');
 
 module.exports.index = function(req, res) {
-    var urlPath = '/data/2.5/forecast?lat=' + req.params.lan +
-        '&lon=' + req.params.lon + '&APPID=' + config.openWeatherAPIKey;
+    var lan = req.body.lan;
+    var lon = req.body.lon;
+    var urlPath = '/data/2.5/forecast?lat=' + lan +
+        '&lon=' + lon + '&APPID=' + config.openWeatherAPIKey;
     var get_options = {
         host: 'api.openweathermap.org',
         port: '80',
@@ -27,7 +30,7 @@ module.exports.index = function(req, res) {
             result = JSON.parse(result);
             var asyncs = [];
             for(var i = 0; i < result.list.length; ++i){
-                asyncs.push(calculateRisk(result.list[i], result.city.coord.lat, result.city.coord.lon));
+                asyncs.push(calculateRisk(result.list[i], lan, lon));
             }
 
             Q.allSettled(asyncs)
@@ -57,7 +60,31 @@ module.exports.index = function(req, res) {
                         }
                     }
 
-                    res.json(results);
+                    /**
+                     * Record drone condition
+                     */
+                    if(req.params.name){
+                        return Drone.findOneAndUpdate({name: req.params.name}, {$set: {
+                            height: Math.random,
+                            lat: req.params.lat,
+                            lon: req.params.lon,
+                            updated: new Date()
+                        }}).exec(function(err ,doc){
+                            res.json(results);
+                        });
+                    }else{
+                        var drone = new Drone({
+                            name: req.params.name,
+                            height: Math.random,
+                            lat: req.params.lat,
+                            lon: req.params.lon,
+                            updated: new Date()
+                        });
+                        return drone.save(function(){
+                            res.json(results);
+                        });
+                    }
+
                 });
         });
     });
@@ -69,6 +96,17 @@ module.exports.getAllBlacklist = function(req,res){
         res.status(200).send(docs);
     });
 };
+
+module.exports.isNameUnique = function(req, res){
+    Drone.find({name: req.params.name}, function(err, docs){
+        if(docs.length > 1){
+            res.status(400).send("Name is not unique");
+        }else{
+            res.status(200).send("Name is good");
+        }
+    })
+};
+
 module.exports.range = function(req, res) {
     var centerLat = parseFloat(req.params.lan);
     var centerLon = parseFloat(req.params.lon);
@@ -77,6 +115,7 @@ module.exports.range = function(req, res) {
     var leftTopLat = centerLat + 10;
     var rightBottomLon = centerLon + 10;
     var rightBottomLat = centerLat - 10;
+
 
     var boxStr = leftTopLon + "," + leftTopLat + "," + rightBottomLon + "," + rightBottomLat + "," + "20";
     var urlPath = '/data/2.5/box/station?cluster=no&cnt=200&format=json&bbox=' + boxStr + '&APPID=' + config.openWeatherAPIKey;
@@ -99,7 +138,7 @@ module.exports.range = function(req, res) {
             result = JSON.parse(result);
             var asyncs = [];
             for(var i = 0; i < result.list.length; ++i){
-                asyncs.push(calculateRisk(result.list[i], result.list[i].coord.lat, result.list[i].coord.lon));
+                asyncs.push(calculateRisk(result.list[i], req.params.lat, req.params.lon));
             }
 
             Q.allSettled(asyncs)
@@ -138,7 +177,7 @@ module.exports.range = function(req, res) {
     request.end();
 };
 
-function calculateRisk(item, lat, lon){
+function calculateRisk(item,actualLat, actualLon){
     var defer = Q.defer();
     FlyConditionBlackList.find().exec(function(err, docs){
         if(err) return defer.reject(err);
@@ -146,10 +185,19 @@ function calculateRisk(item, lat, lon){
 
         for(var i = 0; i < docs.length; ++i){
             var doc = docs[i];
-            var dist = calculateDistance(lat, lon, doc.lat, doc.lng);
-            if(dist < 5400){
+            var dist = calculateDistance(actualLat, actualLon, doc.lat, doc.lng);
+            if(dist > 5400){
+                locationRating = Math.max(locationRating, 0);
+            }else if(dist > 4500){
+                locationRating = Math.max(locationRating, 1);
+            }else if(dist > 3500){
+                locationRating = Math.max(locationRating, 2);
+            }else if(dist > 2500){
+                locationRating = Math.max(locationRating, 3);
+            }else if(dist > 1500){
+                locationRating = Math.max(locationRating, 4);
+            }else{
                 locationRating = Math.max(locationRating, 5);
-                break;
             }
         }
         if(item.rain && Object.keys(item.rain).length > 0){
