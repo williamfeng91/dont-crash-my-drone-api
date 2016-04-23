@@ -191,16 +191,12 @@ function calculateRisk(item,actualLat, actualLon){
             }else if(dist > 4500){
                 locationRating = Math.max(locationRating, 1);
             }else if(dist > 3500){
-            console.log(dist);
                 locationRating = Math.max(locationRating, 2);
             }else if(dist > 2500){
-            console.log(dist);
                 locationRating = Math.max(locationRating, 3);
             }else if(dist > 1500){
-            console.log(dist);
                 locationRating = Math.max(locationRating, 4);
             }else{
-            console.log(dist);
                 locationRating = Math.max(locationRating, 5);
             }
         }
