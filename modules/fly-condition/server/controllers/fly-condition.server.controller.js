@@ -137,29 +137,42 @@ function calculateRisk(item, lat, lon){
     var defer = Q.defer();
     FlyConditionBlackList.find().exec(function(err, docs){
         if(err) return defer.reject(err);
+        var locationRating = 0, windRating = 0, rainRating = 0;
+
         for(var i = 0; i < docs.length; ++i){
             var doc = docs[i];
             if(isWithin(lat, lon, doc.lat, doc.lng, 5000)){
-                defer.resolve(1.0);
-                return 1.0;
+                locationRating = 5;
+                break;
             }
         }
         if(item.rain && Object.keys(item.rain).length > 0){
-            return defer.resolve(0.9);
+            rainRating = 5;
         }
         if(item.wind && item.wind.speed){
-            var risk = (item.wind.speed * 0.1).toFixed(5);
-            return defer.resolve(Math.min(0.95, risk));
+            if(item.wind.speed > 3 && item.wind.speed < 8){
+                windRating = 1;
+            }else if(item.wind.speed >= 8 && item.wind.speed < 11){
+                windRating = 2;
+            }else if(item.wind.speed >= 11 && item.wind.speed < 15){
+                windRating = 3;
+            }else if(item.wind.speed >= 15 && item.wind.speed < 18){
+                windRating = 4;
+            }else if(item.wind.speed >= 18){
+                windRating = 5;
+            }
         }
-
-        return defer.resolve(0.05);
+        console.log(locationRating + "-" +  windRating + "-" + rainRating)
+        return defer.resolve(Math.max(locationRating, windRating, rainRating));
     });
 
     return defer.promise;
 }
 
 function isWithin(lat, lon, latCenter, lonCenter, radius){
-    return calculateDistance(lat, lon, latCenter, lonCenter) <= radius;
+    var dist = calculateDistance(lat, lon, latCenter, lonCenter);
+    console.log(dist);
+    return  dist <= radius;
 }
 
 function calculateDistance(lat1, lon1, lat2, lon2){
@@ -175,7 +188,6 @@ function calculateDistance(lat1, lon1, lat2, lon2){
             Math.sin(deltaLonRad / 2) * Math.sin(deltaLonRad / 2);
 
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
     return R * c;
 }
 
