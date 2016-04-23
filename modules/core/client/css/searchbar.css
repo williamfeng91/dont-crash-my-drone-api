@@ -1,0 +1,63 @@
+.controls {
+    margin-top: 10px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    height: 31px;
+    outline: none;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+#pac-input {
+    background-color: #fff;
+    /*font-family: Roboto;
+    font-size: 15px;
+    font-weight: 300;
+    margin-left: 12px;*/
+    padding: 0 30px 0 13px;
+    text-overflow: ellipsis;
+    /*width: 300px;*/
+}
+
+#pac-input:focus {
+    border-color: #4d90fe;
+}
+
+#pac-input::-webkit-input-placeholder { /* WebKit browsers */
+  line-height: 1.5em;
+}
+#pac-input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  line-height: 1.5em;
+}
+#pac-input::-moz-placeholder { /* Mozilla Firefox 19+ */
+  line-height: 1.5em;
+}
+#pac-input:-ms-input-placeholder { /* Internet Explorer 10+ */
+  line-height: 1.5em;
+}
+
+.pac-container {
+    font-family: Roboto;
+}
+
+.inner-addon {
+    position: relative;
+}
+
+/* style icon */
+.inner-addon .glyphicon {
+    position: absolute;
+    padding: 10px;
+    /*pointer-events: none;*/
+}
+
+/* align icon */
+.left-addon .glyphicon {
+    left: 0px;
+}
+
+.right-addon .glyphicon {
+    padding-top: 18.5px;
+    right: 0px;
+}
