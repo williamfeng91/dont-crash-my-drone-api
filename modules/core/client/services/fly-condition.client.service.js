@@ -17,11 +17,15 @@
     /////////////////////
 
     function getFlyCondition(lat, lng) {
-      console.log("GET /api/flyCondition/" + lat + '/' + lng);
+      console.log("POST /api/flyCondition");
       return $http({
-        url: "/api/flyCondition/" + lat + '/' + lng,
-        method: 'GET',
-        dataType: 'json'
+        url: "/api/flyCondition",
+        method: 'POST',
+        dataType: 'json',
+        data: {
+          lat: lat,
+          lon: lng
+        }
       }).then(handleSuccess, handleError);
     }
 
