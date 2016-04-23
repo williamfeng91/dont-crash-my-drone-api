@@ -9,7 +9,8 @@
 
   function FlyConditionService($http, $q) {
     var service = {
-      getFlyCondition: getFlyCondition
+      getFlyCondition: getFlyCondition,
+      getBlacklist: getBlacklist,
     };
 
     return service;
@@ -19,6 +20,14 @@
       console.log("GET /api/flyCondition/" + lat + '/' + lng);
       return $http({
         url: "/api/flyCondition/" + lat + '/' + lng,
+        method: 'GET',
+        dataType: 'json'
+      }).then(handleSuccess, handleError);
+    }
+
+    function getBlacklist() {
+      return $http({
+        url: "/api/flyCondition/blacklist",
         method: 'GET',
         dataType: 'json'
       }).then(handleSuccess, handleError);

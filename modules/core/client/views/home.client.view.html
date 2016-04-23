@@ -1,6 +1,6 @@
 <section>
   <div map-lazy-load="https://maps.google.com/maps/api/js" map-lazy-load-params="{{vm.googleMapsUrl}}">
-    <ng-map zoom="13" center="current-location" style="height:600px"
+    <ng-map zoom="12" center="current-location" style="height:600px"
         on-center-changed="centerCustomMarker()">
       <custom-control id="searchbar" position="TOP_LEFT">
         <div id="search-container" class="inner-addon right-addon">
@@ -10,6 +10,10 @@
       </custom-control>
       <marker visible="false" id="focus" position="{{vm.pos}}" on-click="vm.showInfoWindow()">
       </marker>
+      <shape id="circle" stroke-color='#0000FF'
+        stroke-opacity="0.8" stroke-weight="2"
+        center="[-33.88349469999999,151.19897219999996]" radius="3000">
+      </shape>
       <info-window id="info">
         <div ng-non-bindable>
           <div justgage
@@ -37,6 +41,10 @@
             </tr>
         </div>
       </info-window>
+      <shape ng-repeat="point in vm.blacklist" name="circle" stroke-color='#FF0000'
+        stroke-opacity="0.8" stroke-weight="2"
+        center="[{{point.lat}}, {{point.lng}}]" radius="5000">
+      </shape>
     </ng-map>
   </div>
 </section>

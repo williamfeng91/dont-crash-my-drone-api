@@ -32,7 +32,7 @@
     vm.search = search;
     vm.clearAddress = clearAddress;
     vm.showInfoWindow = function(evt) {
-      var newPos = {lat: vm.pos.lat() - 0.1, lng: vm.pos.lng()};
+      var newPos = {lat: vm.pos.lat - 0.1, lng: vm.pos.lng};
       vm.map.setCenter(newPos);
       vm.map.markers.focus.setVisible(true);
       vm.map.showInfoWindow('info', vm.map.markers.focus);
@@ -46,12 +46,23 @@
       vm.pos = this.getPlace().geometry.location;
       var lat = vm.pos ? vm.pos.lat() : 0;
       var lng = vm.pos ? vm.pos.lng() : 0;
+      vm.pos = {lat: vm.pos.lat(), lng: vm.pos.lng()};
       FlyConditionService.getFlyCondition(lat, lng).then(getFlyConditionSuccess, getFlyConditionFailed);
 
       function getFlyConditionSuccess(result) {
         console.log(result);
         vm.flyCondition = result[0];
         vm.showInfoWindow();
+        FlyConditionService.getBlacklist().then(getBlacklistSuccess, getBlacklistFailed);
+
+        function getBlacklistSuccess(result) {
+          console.log(result);
+          vm.blacklist = result;
+        }
+
+        function getBlacklistFailed(error) {
+          console.error(error);
+        }
       }
 
       function getFlyConditionFailed(error) {
