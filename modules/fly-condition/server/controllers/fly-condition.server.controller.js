@@ -59,7 +59,12 @@ module.exports.range = function(req, res) {
             result += chunk;
         });
         response.on('end', function(){
-            res.json(JSON.parse(result));
+            result = JSON.parse(result);
+            for(var i = 0; i < result.list.length; ++i){
+                result.list[i].risk = calculateRisk(result.list[i]);
+            }
+
+            res.json(result);
         });
     });
     request.end();
