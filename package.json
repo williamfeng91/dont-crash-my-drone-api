@@ -1,0 +1,31 @@
+{
+  "name": "drone-api",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Don't Crash My Drone API",
+  "repository": "https://github.com/williamfeng91/dont-crash-my-drone-api",
+  "keywords": [],
+  "author": "William Feng",
+  "license": "MIT",
+  "main": "app.js",
+  "dependencies": {
+    "boom": "^2.9.0",
+    "express": "^4.12.3",
+    "fast-csv": "^0.6.0",
+    "file-stream-rotator": "0.0.6",
+    "json-merge-patch": "^0.2.3",
+    "log4js": "^0.6.27",
+    "mongoose": "^4.1.12",
+    "node-constants": "0.0.2",
+    "swagger-express-mw": "^0.1.0",
+    "swagger-tools": "^0.9.7"
+  },
+  "devDependencies": {
+    "should": "^7.1.0",
+    "supertest": "^1.0.0"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "test": "swagger project test"
+  }
+}
