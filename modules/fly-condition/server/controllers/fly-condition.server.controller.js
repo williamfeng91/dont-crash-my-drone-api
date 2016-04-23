@@ -46,11 +46,12 @@ module.exports.index = function(req, res) {
                                     direction: convertWindDirection(result.list[j].wind.deg)
                                 }
                             }
-                            if(result.list[j].rain){
+                            if(result.list[j].rain && Object.keys(result.list[j].rain).length > 0){
                                 resultItem["rain"] = result.list[j].rain;
                             }else{
                                 resultItem["rain"] = null;
                             }
+                            resultItem.description = result.list[j].weather[0].description;
 
                             results.push(resultItem);
                         }
@@ -112,7 +113,7 @@ module.exports.range = function(req, res) {
                                     direction: convertWindDirection(result.list[j].wind.deg)
                                 }
                             }
-                            if(result.list[j].rain){
+                            if(result.list[j].rain && Object.keys(result.list[j].rain).length > 0){
                                 resultItem["rain"] = result.list[j].rain;
                             }else{
                                 resultItem["rain"] = null;
@@ -136,29 +137,42 @@ function calculateRisk(item, lat, lon){
     var defer = Q.defer();
     FlyConditionBlackList.find().exec(function(err, docs){
         if(err) return defer.reject(err);
+        var locationRating = 0, windRating = 0, rainRating = 0;
+
         for(var i = 0; i < docs.length; ++i){
             var doc = docs[i];
-            if(isWithin(lat, lon, doc.lat, doc.lng, 5000)){
-                defer.resolve(1.0);
-                return 1.0;
+            var dist = calculateDistance(lat, lon, doc.lat, doc.lng);
+            if(dist < 5400){
+                locationRating = Math.max(locationRating, 5);
+                break;
             }
         }
-        if(item.rain){
-            return defer.resolve(0.9);
+        if(item.rain && Object.keys(item.rain).length > 0){
+            rainRating = 5;
         }
         if(item.wind && item.wind.speed){
-            var risk = (item.wind.speed * 0.1).toFixed(5);
-            return defer.resolve(Math.min(0.95, risk));
+            if(item.wind.speed > 3 && item.wind.speed < 8){
+                windRating = 1;
+            }else if(item.wind.speed >= 8 && item.wind.speed < 11){
+                windRating = 2;
+            }else if(item.wind.speed >= 11 && item.wind.speed < 15){
+                windRating = 3;
+            }else if(item.wind.speed >= 15 && item.wind.speed < 18){
+                windRating = 4;
+            }else if(item.wind.speed >= 18){
+                windRating = 5;
+            }
         }
-
-        return defer.resolve(0.05);
+        return defer.resolve(Math.max(locationRating, windRating, rainRating));
     });
 
     return defer.promise;
 }
 
 function isWithin(lat, lon, latCenter, lonCenter, radius){
-    return calculateDistance(lat, lon, latCenter, lonCenter) <= radius;
+    var dist = calculateDistance(lat, lon, latCenter, lonCenter);
+    console.log(dist);
+    return  dist <= radius;
 }
 
 function calculateDistance(lat1, lon1, lat2, lon2){
@@ -174,7 +188,6 @@ function calculateDistance(lat1, lon1, lat2, lon2){
             Math.sin(deltaLonRad / 2) * Math.sin(deltaLonRad / 2);
 
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
     return R * c;
 }
 
