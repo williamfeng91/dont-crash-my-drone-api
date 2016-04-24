@@ -65,24 +65,16 @@ module.exports.index = function(req, res) {
                      */
                     if(req.params.name){
                         return Drone.findOneAndUpdate({name: req.params.name}, {$set: {
+                            name: req.params.name,
                             height: Math.random,
-                            lat: req.params.lat,
-                            lon: req.params.lon,
+                            lat: req.body.lan,
+                            lon: req.body.lon,
                             updated: new Date()
-                        }}).exec(function(err ,doc){
+                        }}, {upsert: true}).exec(function(err ,doc){
                             res.json(results);
                         });
                     }else{
-                        var drone = new Drone({
-                            name: req.params.name,
-                            height: Math.random,
-                            lat: req.params.lat,
-                            lon: req.params.lon,
-                            updated: new Date()
-                        });
-                        return drone.save(function(){
-                            res.json(results);
-                        });
+                        res.json(results);
                     }
 
                 });
