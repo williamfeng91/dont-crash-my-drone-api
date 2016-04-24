@@ -205,14 +205,22 @@ function calculateRisk(item,actualLat, actualLon){
             }else if(dist > 1500){
                 if(doc.type === 0){
                     ratingResult.location = "close to airport";
-                }else{
+                }
+                else if(doc.type === 2){
+                    ratingResult.location = "close to user reported no-fly zone";
+                }
+                else{
                     ratingResult.location = "close to popular area";
                 }
                 locationRating = Math.max(locationRating, 4);
             }else{
                 if(doc.type === 0){
                     ratingResult.location = "close to airport";
-                }else{
+                }
+                else if(doc.type === 2){
+                    ratingResult.location = "close to user reported no-fly zone";
+                }
+                else{
                     ratingResult.location = "close to popular area";
                 }
                 locationRating = Math.max(locationRating, 5);
