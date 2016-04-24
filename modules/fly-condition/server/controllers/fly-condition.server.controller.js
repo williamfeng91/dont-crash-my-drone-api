@@ -244,7 +244,7 @@ function calculateRisk(item,actualLat, actualLon){
             ratingResult.rain = "raining";
         }
 
-        return defer.resolve(Math.max(locationRating, windRating, rainRating));
+        return defer.resolve(ratingResult);
     });
 
     return defer.promise;
