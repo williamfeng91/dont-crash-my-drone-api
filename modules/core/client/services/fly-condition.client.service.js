@@ -11,6 +11,7 @@
     var service = {
       getFlyCondition: getFlyCondition,
       getBlacklist: getBlacklist,
+        getUsers: getUsers
     };
 
     return service;
@@ -32,6 +33,14 @@
     function getBlacklist() {
       return $http({
         url: "/api/flyCondition/blacklist",
+        method: 'GET',
+        dataType: 'json'
+      }).then(handleSuccess, handleError);
+    }
+
+    function getUsers(){
+      return $http({
+        url: "/api/flyCondition/allUsers",
         method: 'GET',
         dataType: 'json'
       }).then(handleSuccess, handleError);

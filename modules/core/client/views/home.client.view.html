@@ -55,6 +55,9 @@
       <shape id="popularArea{{$index}}" ng-repeat="point in vm.popularAreas" name="circle" stroke-color='{{point.color}}'
         stroke-opacity="0.8" stroke-weight="2"
         center="[{{point.lat}}, {{point.lng}}]" radius="1000">
+      <shape id="users" ng-repeat="point in vm.users" name="circle" stroke-color='#FFFF00'
+        stroke-opacity="0.8" stroke-weight="2"
+        center="[{{point.lat}}, {{point.lon}}]" radius="10">
       </shape>
     </ng-map>
   </div>
