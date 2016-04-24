@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
 var FlyConditionBlackList = mongoose.model("FlyConditionBlacklist");
 var Drone = mongoose.model("Drone");
 var Q = require('q');
+var moment = require('moment');
 
 module.exports.index = function(req, res) {
     var lan = req.body.lan;
@@ -81,6 +82,20 @@ module.exports.index = function(req, res) {
         });
     });
     request.end();
+};
+
+module.exports.getAllUsers = function(req, res){
+    Drone.find().exec(function(err, docs){
+        var results = [];
+        for(var i = 0; i < docs.length; ++i){
+            var now = moment().subtract(10, 'second');
+            var updated = moment(docs[i].updated);
+            if(updated.isAfter(now)){
+                results.push(docs[i]);
+            }
+        }
+        res.json(results);
+    });
 };
 
 module.exports.getAllBlacklist = function(req,res){
