@@ -57,10 +57,16 @@
 
         function getBlacklistSuccess(result) {
           console.log(result);
-          vm.blacklist = [];
+          vm.airports = [];
+          vm.popularAreas = [];
           for (var i = 0; i < result.length; i++) {
-            if (result[i].type == 0)
-              vm.blacklist.push(result[i]);
+            if (result[i].type == 0) {
+              result[i].color = '#ff0000';
+              vm.airports.push(result[i]);
+            } else {
+              result[i].color = '#f9c802';
+              vm.popularAreas.push(result[i]);
+            }
           }
         }
 

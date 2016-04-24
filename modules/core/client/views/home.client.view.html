@@ -43,13 +43,17 @@
           </table>
         </div>
       </info-window>
-      <shape id="focusCircle" visible="false" name="circle" stroke-color='#0000FF'
+      <shape id="focusCircle" visible="false" name="circle" stroke-color='#0000ff'
         stroke-opacity="0.8" stroke-weight="2"
         center="{{vm.pos}}" radius="500">
       </shape>
-      <shape ng-repeat="point in vm.blacklist" name="circle" stroke-color='#FF0000'
+      <shape id="airport{{$index}}" ng-repeat="point in vm.airports" name="circle" stroke-color='{{point.color}}'
         stroke-opacity="0.8" stroke-weight="2"
         center="[{{point.lat}}, {{point.lng}}]" radius="5000">
+      </shape>
+      <shape id="popularArea{{$index}}" ng-repeat="point in vm.popularAreas" name="circle" stroke-color='{{point.color}}'
+        stroke-opacity="0.8" stroke-weight="2"
+        center="[{{point.lat}}, {{point.lng}}]" radius="1000">
       </shape>
     </ng-map>
   </div>
