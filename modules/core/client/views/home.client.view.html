@@ -14,7 +14,7 @@
         <div ng-non-bindable class="info-window">
           <div class="justgage"
             title="Fly Condition"
-            value="{{vm.flyCondition.risk * 20}}" value-font-color="black"
+            value="{{vm.flyCondition.risk.total * 20}}" value-font-color="black"
             min="0" max="100"
             hide-min-max="false" hide-value="false" hide-inner-shadow="false"
             gauge-width-scale="0.5" gauge-color="grey"
@@ -26,6 +26,7 @@
             donut="true" donut-start-angle="90"
             counter="true" decimals="2" symbol="%" format-number="true"
             human-friendly="true" human-friendly-decimal="true"></div>
+          <p ng-show="vm.flyCondition.risk.total >= 4" class="risk-msg">Warning: {{vm.flyCondition.risk.location}}</p>
           <table class="table">
             <tr>
               <td>Weather</td>

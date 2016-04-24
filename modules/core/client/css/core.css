@@ -41,3 +41,8 @@ a:hover .header-profile-image {
 .has-error .help-inline.error-text {
   display: inline;
 }
+
+.risk-msg {
+  padding-left: 5px;
+  color: #FF0000;
+}
