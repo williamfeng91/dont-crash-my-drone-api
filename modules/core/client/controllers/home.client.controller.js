@@ -31,6 +31,8 @@
 
     vm.search = search;
     vm.clearAddress = clearAddress;
+    vm.showTooltip = showTooltip;
+    vm.hideTooltip = hideTooltip;
     vm.showInfoWindow = function(evt) {
       var newPos = {lat: vm.pos.lat() - 0.1, lng: vm.pos.lng()};
       vm.map.setCenter(newPos);
@@ -82,6 +84,14 @@
 
     function clearAddress() {
       vm.address = "";
+    }
+
+    function showTooltip(e, msg) {
+      vm.map.getDiv().setAttribute('title', msg);
+    }
+
+    function hideTooltip(e) {
+      vm.map.getDiv().removeAttribute('title');
     }
   }
 
