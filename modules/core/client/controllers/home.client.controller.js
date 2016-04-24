@@ -72,13 +72,17 @@
           console.log(result);
           vm.airports = [];
           vm.popularAreas = [];
+          vm.userReports = [];
           for (var i = 0; i < result.length; i++) {
             if (result[i].type == 0) {
               result[i].color = '#ff0000';
               vm.airports.push(result[i]);
-            } else {
+            } else if (result[i].type == 1) {
               result[i].color = '#f9c802';
               vm.popularAreas.push(result[i]);
+            } else if (result[i].type == 2) {
+              result[i].color = '#ff0000';
+              vm.userReports.push(result[i]);
             }
           }
         }
