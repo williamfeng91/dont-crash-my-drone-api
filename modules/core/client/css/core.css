@@ -46,3 +46,8 @@ a:hover .header-profile-image {
   padding-left: 5px;
   color: #FF0000;
 }
+
+.user-marker {
+  max-width: 10px;
+  max-height: 10px;
+}

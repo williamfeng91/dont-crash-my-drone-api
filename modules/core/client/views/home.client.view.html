@@ -48,15 +48,22 @@
         stroke-opacity="0.8" stroke-weight="2"
         center="{{vm.pos}}" radius="500">
       </shape>
-      <shape id="airport{{$index}}" ng-repeat="point in vm.airports" name="circle" stroke-color='{{point.color}}'
+      <shape ng-repeat="point in vm.airports"
+        on-mouseover="vm.showTooltip(event, 'No-fly Zone - Airport')"
+        on-mouseout="vm.hideTooltip(event)"
+        id="airport{{$index}}" name="circle" stroke-color='{{point.color}}'
         stroke-opacity="0.8" stroke-weight="2"
         center="[{{point.lat}}, {{point.lng}}]" radius="5000">
       </shape>
-      <shape id="popularArea{{$index}}" ng-repeat="point in vm.popularAreas" name="circle" stroke-color='{{point.color}}'
+      <shape ng-repeat="point in vm.popularAreas"
+        on-mouseover="vm.showTooltip(event, 'Popular Area')"
+        on-mouseout="vm.hideTooltip(event)"
+        id="popularArea{{$index}}" name="circle" stroke-color='{{point.color}}'
         stroke-opacity="0.8" stroke-weight="2"
         center="[{{point.lat}}, {{point.lng}}]" radius="1000">
         <marker visible="true" id="users" ng-repeat="point in vm.users"
                 position="[{{point.lat}}, {{point.lon}}]" icon="http://www.wrl-gc.com/images/icon_drone_drkBlue.png"></marker>
+
     </ng-map>
   </div>
 </section>
