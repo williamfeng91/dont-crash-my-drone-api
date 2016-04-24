@@ -189,6 +189,7 @@ function calculateRisk(item,actualLat, actualLon){
     FlyConditionBlackList.find().exec(function(err, docs){
         if(err) return defer.reject(err);
         var locationRating = 0, windRating = 0, rainRating = 0;
+        var ratingResult = {};
 
         for(var i = 0; i < docs.length; ++i){
             var doc = docs[i];
@@ -202,8 +203,18 @@ function calculateRisk(item,actualLat, actualLon){
             }else if(dist > 2500){
                 locationRating = Math.max(locationRating, 3);
             }else if(dist > 1500){
+                if(doc.type === 0){
+                    ratingResult.location = "close to airport";
+                }else{
+                    ratingResult.location = "close to popular area";
+                }
                 locationRating = Math.max(locationRating, 4);
             }else{
+                if(doc.type === 0){
+                    ratingResult.location = "close to airport";
+                }else{
+                    ratingResult.location = "close to popular area";
+                }
                 locationRating = Math.max(locationRating, 5);
             }
         }
@@ -223,6 +234,16 @@ function calculateRisk(item,actualLat, actualLon){
                 windRating = 5;
             }
         }
+        ratingResult.total = Math.max(locationRating, windRating, rainRating);
+
+        if(windRating === 4 || windRating === 5){
+            ratingResult.wind = "strong wind";
+        }
+
+        if(rainRating === 4 || rainRating === 5){
+            ratingResult.rain = "raining";
+        }
+
         return defer.resolve(Math.max(locationRating, windRating, rainRating));
     });
 
