@@ -61,8 +61,8 @@
         id="popularArea{{$index}}" name="circle" stroke-color='{{point.color}}'
         stroke-opacity="0.8" stroke-weight="2"
         center="[{{point.lat}}, {{point.lng}}]" radius="1000">
-        <marker visible="true" id="users" ng-repeat="point in vm.users"
-                position="[{{point.lat}}, {{point.lon}}]" icon="http://www.wrl-gc.com/images/icon_drone_blue.png"></marker>
+        <marker visible="true" id="users" ng-repeat="point in vm.users" class="user-marker"
+                position="[{{point.lat}}, {{point.lon}}]" icon="/img/icon_drone_blue.png"></marker>
     </ng-map>
   </div>
 </section>
