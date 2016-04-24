@@ -56,7 +56,18 @@
         vm.flyCondition = result[0];
         vm.showInfoWindow();
         FlyConditionService.getBlacklist().then(getBlacklistSuccess, getBlacklistFailed);
-
+        FlyConditionService.getUsers().then(
+            function(result){
+              vm.users = [];
+              for (var i = 0; i < result.length; i++) {
+                vm.users.push(result[i]);
+              }
+              console.log(vm.users);
+            },
+            function(error){
+              console.error(error);
+            }
+        );
         function getBlacklistSuccess(result) {
           console.log(result);
           vm.airports = [];
