@@ -9,7 +9,7 @@ var Q = require('q');
 var moment = require('moment');
 
 module.exports.index = function(req, res) {
-    var lan = req.body.lan;
+    var lan = req.body.lat;
     var lon = req.body.lon;
     var urlPath = '/data/2.5/forecast?lat=' + lan +
         '&lon=' + lon + '&APPID=' + config.openWeatherAPIKey;
