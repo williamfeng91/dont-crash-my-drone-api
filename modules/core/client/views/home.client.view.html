@@ -54,6 +54,19 @@
         id="airport{{$index}}" name="circle" stroke-color='{{point.color}}'
         stroke-opacity="0.8" stroke-weight="2"
         center="[{{point.lat}}, {{point.lng}}]" radius="5000">
+        <marker visible="true" id="airport-marker{{$index}}"
+                position="[{{point.lat}}, {{point.lng}}]"
+                icon="https://s3-ap-southeast-2.amazonaws.com/alex-dreamworld/no-fly-zone40x40.png"></marker>
+      </shape>
+      <shape ng-repeat="point in vm.userReports"
+        on-mouseover="vm.showTooltip(event, 'No-fly Zone - User reported')"
+        on-mouseout="vm.hideTooltip(event)"
+        id="airport{{$index}}" name="circle" stroke-color='{{point.color}}'
+        stroke-opacity="0.8" stroke-weight="2"
+        center="[{{point.lat}}, {{point.lng}}]" radius="3000">
+        <marker visible="true" id="user-report-marker{{$index}}"
+                position="[{{point.lat}}, {{point.lng}}]"
+                icon="https://s3-ap-southeast-2.amazonaws.com/alex-dreamworld/who-icon40x40.png"></marker>
       </shape>
       <shape ng-repeat="point in vm.popularAreas"
         on-mouseover="vm.showTooltip(event, 'Popular Area')"
@@ -61,8 +74,10 @@
         id="popularArea{{$index}}" name="circle" stroke-color='{{point.color}}'
         stroke-opacity="0.8" stroke-weight="2"
         center="[{{point.lat}}, {{point.lng}}]" radius="1000">
-        <marker visible="true" id="users" ng-repeat="point in vm.users"
-                position="[{{point.lat}}, {{point.lon}}]" icon="https://s3-ap-southeast-2.amazonaws.com/alex-dreamworld/icon_drone_blue.png"></marker>
+      </shape>
+      <marker visible="true" id="users" ng-repeat="point in vm.users"
+              position="[{{point.lat}}, {{point.lng}}]"
+              icon="https://s3-ap-southeast-2.amazonaws.com/alex-dreamworld/icon_drone_blue.png"></marker>
 
     </ng-map>
   </div>
