@@ -217,6 +217,12 @@ function calculateRisk(item,actualLat, actualLon){
                 }
                 locationRating = Math.max(locationRating, 5);
             }
+
+            if(doc.type === 0 && dist <= 5400){
+                ratingResult.location = "close to airport";
+                locationRating = Math.max(locationRating, 5);
+                break;
+            }
         }
         if(item.rain && Object.keys(item.rain).length > 0){
             rainRating = 5;
