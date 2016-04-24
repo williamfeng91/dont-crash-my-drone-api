@@ -65,7 +65,8 @@
     "socket.io": "~1.4.5",
     "swig": "~1.4.2",
     "validator": "~5.1.0",
-    "q": "~1.4.1"
+    "q": "~1.4.1",
+    "moment": "~2.13.0"
   },
   "devDependencies": {
     "coveralls": "~2.11.6",
