@@ -10,13 +10,10 @@
       </custom-control>
       <marker visible="false" id="focus" position="{{vm.pos}}" on-click="vm.showInfoWindow()">
       </marker>
-      <!-- <shape id="circle" stroke-color='#0000FF'
-        stroke-opacity="0.8" stroke-weight="2"
-        center="[-33.88349469999999,151.19897219999996]" radius="3000">
-      </shape> -->
-      <info-window id="info">
-        <div ng-non-bindable>
-          <div justgage
+      <info-window id="info" z-index="0">
+        <div ng-non-bindable class="info-window">
+          <div class="justgage"
+            title="Fly Condition"
             value="{{vm.flyCondition.risk * 20}}" value-font-color="black"
             min="0" max="100"
             hide-min-max="false" hide-value="false" hide-inner-shadow="false"
@@ -31,6 +28,10 @@
             human-friendly="true" human-friendly-decimal="true"></div>
           <table class="table">
             <tr>
+              <td>Weather</td>
+              <td>{{vm.flyCondition.description}}</td>
+            </tr>
+            <tr>
               <td>Wind</td>
               <td>{{vm.flyCondition.wind.speed}} km/h {{vm.flyCondition.wind.direction}}</td>
             </tr>
@@ -39,8 +40,13 @@
               <td ng-if="vm.flyCondition.rain">Yes</td>
               <td ng-if="!vm.flyCondition.rain">None</td>
             </tr>
+          </table>
         </div>
       </info-window>
+      <shape id="focusCircle" visible="false" name="circle" stroke-color='#0000FF'
+        stroke-opacity="0.8" stroke-weight="2"
+        center="{{vm.pos}}" radius="500">
+      </shape>
       <shape ng-repeat="point in vm.blacklist" name="circle" stroke-color='#FF0000'
         stroke-opacity="0.8" stroke-weight="2"
         center="[{{point.lat}}, {{point.lng}}]" radius="5000">
